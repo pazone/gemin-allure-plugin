@@ -1,5 +1,5 @@
 {
-  "name": "allure-gemini-plugin",
+  "name": "gemini-allure-plugin",
   "version": "0.0.1",
   "description": "Allure report generating plugin for Gemini",
   "keywords": [
