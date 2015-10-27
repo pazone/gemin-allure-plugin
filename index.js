@@ -41,14 +41,16 @@ function AllureReporter(gemini) {
                 var sutePath = result.suite.path.join('/');
                 suites[sutePath] = suites[sutePath].then(function() {
                     console.log('saving diff', result.state.name);
-                    return result.saveDiffTo().then(function() {
-                        var name = writer.writeBuffer(allureReporter.options.targetDir, buffer, '.png'),
-                            attachment = new Attachment('diff', name, buffer.length, 'image/png');
-                        currentTest.addAttachment(attachment);
-                        console.log('diff done', result.state.name);
-                    });
+                    if (!result.isEqual) {
+                        return result.saveDiffTo().then(function (buffer) {
+                            var source = writer.writeBuffer(allureReporter.options.targetDir, buffer, 'png'),
+                                attachment = new Attachment('diff', source, buffer.length, 'image/png');
+                            currentTest.addAttachment(attachment);
+                            console.log('diff done', result.state.name);
+                        });
+                    }
                 }, function(e) {
-                    console.log(e);
+                    console.log(e.stack);
                 });
                 allureReporter.endCase('failed', new Error('screenshots not match'));
             }
